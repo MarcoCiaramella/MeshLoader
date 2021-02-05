@@ -1,4 +1,7 @@
 # MeshLoader
+
+[![](https://jitpack.io/v/MarcoCiaramella/MeshLoader.svg)](https://jitpack.io/#MarcoCiaramella/MeshLoader)
+
 A mesh loader Android library. Supports .ply and .obj format.
 
 ## How to import in your Android project
