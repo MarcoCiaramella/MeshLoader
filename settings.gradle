@@ -1,0 +1,3 @@
+include ':meshloaderlib'
+include ':app'
+rootProject.name = "MeshLoader"
