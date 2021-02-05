@@ -1,5 +1,5 @@
 # MeshLoader
-A mesh loader library. Supports .ply and .obj format.
+A mesh loader Android library. Supports .ply and .obj format.
 
 ## How to import in your Android project
 Add JitPack in your root build.gradle at the end of repositories:
