@@ -10,9 +10,10 @@ import org.junit.Test;
 
 public class ObjTest {
 
+    private final Context context = ApplicationProvider.getApplicationContext();
+
     @Test
     public void load_isCorrect(){
-        Context context = ApplicationProvider.getApplicationContext();
         Obj obj = new Obj(context,"cube.obj");
         obj.load();
     }
