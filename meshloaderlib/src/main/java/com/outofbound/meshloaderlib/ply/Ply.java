@@ -1,4 +1,4 @@
-package com.outofbound.meshloaderlib;
+package com.outofbound.meshloaderlib.ply;
 
 import android.content.Context;
 
@@ -11,12 +11,10 @@ public class Ply {
     private float[] colors = null;
     private float[] uvs = null;
     private int[] indices = null;
-    private final Context context;
-    private final String fileName;
+    private final String[] content;
 
-    public Ply(Context context, String fileName){
-        this.context = context;
-        this.fileName = fileName;
+    public Ply(Context context, String filename){
+        content = TextFileReader.getString(context, filename).split("end_header\n");
     }
 
     public float[] getVertices(){
@@ -40,7 +38,6 @@ public class Ply {
     }
 
     public void load(){
-        String[] content = TextFileReader.getString(context, fileName).split("end_header\n");
         String[] header = content[0].split("\n");
         String[] data = content[1].split("\n");
         int numVertices = getNumVertices(data);

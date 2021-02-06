@@ -1,4 +1,4 @@
-package com.outofbound.meshloaderlib;
+package com.outofbound.meshloaderlib.obj;
 
 import android.content.Context;
 
@@ -12,18 +12,31 @@ public class Obj {
     private final float[] normals;
     private final int[] indices;
     private final String[] content;
+    private Material material;
 
-    public Obj(Context context, String fileName){
-        content = TextFileReader.getString(context, fileName).split("\n");
+    /**
+     * Instantiate Obj.
+     * @param context current context.
+     * @param filename the filename (.obj) in assets folder.
+     */
+    public Obj(Context context, String filename){
+        content = TextFileReader.getString(context, filename).split("\n");
         int numVertices = getNumVertices();
         vertices = new float[numVertices *3];
         textureCoords = new float[numVertices *2];
         normals = new float[numVertices *3];
         indices = new int[getNumIndices()];
+        if (useMaterial()){
+            material = new Material(context,getMaterialFileName());
+        }
     }
 
+    /**
+     * Load the .obj file.
+     */
     public void load(){
         loadFaces();
+        material.load();
     }
 
     private void loadVertices(){
@@ -194,19 +207,53 @@ public class Obj {
         return pos;
     }
 
+    /**
+     * Return the vertices loaded.
+     * @return the vertices.
+     */
     public float[] getVertices() {
         return vertices;
     }
 
+    /**
+     * Return the texture coordinates loaded.
+     * @return the texture coordinates.
+     */
     public float[] getTextureCoords() {
         return textureCoords;
     }
 
+    /**
+     * Return the normals loaded.
+     * @return the normals.
+     */
     public float[] getNormals() {
         return normals;
     }
 
+    /**
+     * Return the indices loaded.
+     * @return the indices.
+     */
     public int[] getIndices() {
         return indices;
+    }
+
+    private boolean useMaterial(){
+        for (String line : content){
+            if (line.startsWith("usemtl")){
+                return !line.endsWith("None");
+            }
+        }
+        return false;
+    }
+
+    private String getMaterialFileName(){
+        for (String line : content){
+            if (line.startsWith("mtllib")){
+                return line.split(" ")[1];
+            }
+        }
+        return null;
     }
 }
