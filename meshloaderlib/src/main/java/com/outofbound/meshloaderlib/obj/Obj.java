@@ -36,7 +36,9 @@ public class Obj {
      */
     public void load(){
         loadFaces();
-        material.load();
+        if (material != null) {
+            material.load();
+        }
     }
 
     private void loadVertices(){
