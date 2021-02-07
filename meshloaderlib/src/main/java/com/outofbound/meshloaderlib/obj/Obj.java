@@ -2,7 +2,7 @@ package com.outofbound.meshloaderlib.obj;
 
 import android.content.Context;
 
-import com.outofbound.meshloaderlib.util.TextFileReader;
+import com.outofbound.meshloaderlib.util.Util;
 
 
 public class Obj {
@@ -20,7 +20,7 @@ public class Obj {
      * @param filename the filename (.obj) in assets folder.
      */
     public Obj(Context context, String filename){
-        content = TextFileReader.getString(context, filename).split("\n");
+        content = Util.read(context, filename).split("\n");
         int numVertices = getNumVertices();
         vertices = new float[numVertices *3];
         textureCoords = new float[numVertices *2];
@@ -89,32 +89,32 @@ public class Obj {
     }
 
     private int loadVertex(float[] vertices, int pos, String... values){
-        return addToArray(vertices,pos,values);
+        return Util.addToArray(vertices,pos,values);
     }
 
     private int loadTextureCoord(float[] textureCoords, int pos, String... values){
-        return addToArray(textureCoords,pos,values);
+        return Util.addToArray(textureCoords,pos,values);
     }
 
     private int loadNormal(float[] normals, int pos, String... values){
-        return addToArray(normals,pos,values);
+        return Util.addToArray(normals,pos,values);
     }
 
     private int loadFace(String[] values, int pos, float[] textureCoords, float[] normals){
         String[] faceVertex1 = values[1].split("/");
-        int iv1 = toInt(faceVertex1[0]) - 1;
-        int ivt1 = toInt(faceVertex1[1]) - 1;
-        int ivn1 = toInt(faceVertex1[2]) - 1;
+        int iv1 = Integer.parseInt(faceVertex1[0]) - 1;
+        int ivt1 = Integer.parseInt(faceVertex1[1]) - 1;
+        int ivn1 = Integer.parseInt(faceVertex1[2]) - 1;
         for (int i = 1; i < values.length - 2; i++){
             String[] faceVertex2 = values[i+1].split("/");
-            int iv2 = toInt(faceVertex2[0]) - 1;
-            int ivt2 = toInt(faceVertex2[1]) - 1;
-            int ivn2 = toInt(faceVertex2[2]) - 1;
+            int iv2 = Integer.parseInt(faceVertex2[0]) - 1;
+            int ivt2 = Integer.parseInt(faceVertex2[1]) - 1;
+            int ivn2 = Integer.parseInt(faceVertex2[2]) - 1;
             String[] faceVertex3 = values[i+2].split("/");
-            int iv3 = toInt(faceVertex3[0]) - 1;
-            int ivt3 = toInt(faceVertex3[1]) - 1;
-            int ivn3 = toInt(faceVertex3[2]) - 1;
-            pos = addToArray(indices,pos,iv1,iv2,iv3);
+            int iv3 = Integer.parseInt(faceVertex3[0]) - 1;
+            int ivt3 = Integer.parseInt(faceVertex3[1]) - 1;
+            int ivn3 = Integer.parseInt(faceVertex3[2]) - 1;
+            pos = Util.addToArray(indices,pos,iv1,iv2,iv3);
             copy(textureCoords,ivt1,this.textureCoords,iv1,2);
             copy(textureCoords,ivt2,this.textureCoords,iv2,2);
             copy(textureCoords,ivt3,this.textureCoords,iv3,2);
@@ -187,28 +187,6 @@ public class Obj {
         return line.startsWith("f ");
     }
 
-    private float toFloat(String value){
-        return Float.parseFloat(value);
-    }
-
-    private int toInt(String value){
-        return Integer.parseInt(value);
-    }
-
-    private int addToArray(float[] array, int pos, String... values){
-        for (String value : values){
-            array[pos++] = toFloat(value);
-        }
-        return pos;
-    }
-
-    private int addToArray(int[] array, int pos, Integer... values){
-        for (Integer value : values){
-            array[pos++] = value;
-        }
-        return pos;
-    }
-
     /**
      * Return the vertices loaded.
      * @return the vertices.
@@ -257,5 +235,13 @@ public class Obj {
             }
         }
         return null;
+    }
+
+    /**
+     * Return Material.
+     * @return Material.
+     */
+    public Material getMaterial() {
+        return material;
     }
 }

@@ -2,7 +2,7 @@ package com.outofbound.meshloaderlib.ply;
 
 import android.content.Context;
 
-import com.outofbound.meshloaderlib.util.TextFileReader;
+import com.outofbound.meshloaderlib.util.Util;
 
 public class Ply {
 
@@ -14,7 +14,7 @@ public class Ply {
     private final String[] content;
 
     public Ply(Context context, String filename){
-        content = TextFileReader.getString(context, filename).split("end_header\n");
+        content = Util.read(context, filename).split("end_header\n");
     }
 
     public float[] getVertices(){
@@ -110,7 +110,7 @@ public class Ply {
         for (String line : data) {
             String[] values = line.split(" ");
             if (isFloat(values[0])) {
-                pos = addToArray(vertices,pos,values[0],values[1],values[2]);
+                pos = Util.addToArray(vertices,pos,values[0],values[1],values[2]);
             }
         }
     }
@@ -120,7 +120,7 @@ public class Ply {
         for (String line : data) {
             String[] values = line.split(" ");
             if (isFloat(values[0])) {
-                pos = addToArray(normals,pos,values[3],values[4],values[5]);
+                pos = Util.addToArray(normals,pos,values[3],values[4],values[5]);
             }
         }
     }
@@ -137,7 +137,7 @@ public class Ply {
                 if (values.length == 10) {
                     c4 = Float.parseFloat(values[9]) / 255f;
                 }
-                pos = addToArray(colors,pos,c1,c2,c3,c4);
+                pos = Util.addToArray(colors,pos,c1,c2,c3,c4);
             }
         }
     }
@@ -147,7 +147,7 @@ public class Ply {
         for (String line : data) {
             String[] values = line.split(" ");
             if (isFloat(values[0])) {
-                pos = addToArray(uvs,pos,values[6],values[7]);
+                pos = Util.addToArray(uvs,pos,values[6],values[7]);
             }
         }
     }
@@ -159,31 +159,10 @@ public class Ply {
             if (!isFloat(values[0])) {
                 int num = Integer.parseInt(values[0]);
                 for (int i = 1; i < num - 1; i++){
-                    pos = addToArray(indices,pos,values[1],values[i+1],values[i+2]);
+                    pos = Util.addToArray(indices,pos,values[1],values[i+1],values[i+2]);
                 }
             }
         }
-    }
-
-    private int addToArray(float[] arr, int pos, String... values){
-        for (String value : values){
-            arr[pos++] = Float.parseFloat(value);
-        }
-        return pos;
-    }
-
-    private int addToArray(float[] arr, int pos, float... values){
-        for (float value : values){
-            arr[pos++] = value;
-        }
-        return pos;
-    }
-
-    private int addToArray(int[] arr, int pos, String... values){
-        for (String value : values){
-            arr[pos++] = Integer.parseInt(value);
-        }
-        return pos;
     }
 
     private boolean isFloat(String value){
