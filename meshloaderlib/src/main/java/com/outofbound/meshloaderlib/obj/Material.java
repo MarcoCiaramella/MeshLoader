@@ -1,21 +1,31 @@
 package com.outofbound.meshloaderlib.obj;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.outofbound.meshloaderlib.util.Util;
 
 public class Material {
 
+    private final Context context;
+    private final String[] content;
     private float ns;
-    private float[] ka;
-    private float[] kd;
-    private float[] ks;
+    private final float[] ka;
+    private final float[] kd;
+    private final float[] ks;
     private float d;
     private int illum;
-    private final String[] content;
+    private float ni;
+    private Bitmap mapKa;
+    private Bitmap mapKd;
+    private Bitmap mapKs;
 
     public Material(Context context, String filename){
+        this.context = context;
         content = Util.read(context, filename).split("\n");
+        ka = new float[3];
+        kd = new float[3];
+        ks = new float[3];
     }
 
     public void load(){
@@ -37,6 +47,9 @@ public class Material {
             }
             else if (isIllum(line)){
                 loadIllum(line);
+            }
+            else if (isNi(line)){
+                loadNi(line);
             }
         }
     }
@@ -68,6 +81,22 @@ public class Material {
         illum = Integer.parseInt(line.split(" ")[1]);
     }
 
+    private void loadNi(String line){
+        ni = Float.parseFloat(line.split(" ")[1]);
+    }
+
+    private void loadMapKa(String line){
+        mapKa = Util.getBitmapFromAsset(context,line.split(" ")[1]);
+    }
+
+    private void loadMapKd(String line){
+        mapKd = Util.getBitmapFromAsset(context,line.split(" ")[1]);
+    }
+
+    private void loadMapKs(String line){
+        mapKs = Util.getBitmapFromAsset(context,line.split(" ")[1]);
+    }
+
     private boolean isNs(String line){
         return line.startsWith("ns");
     }
@@ -92,6 +121,22 @@ public class Material {
         return line.startsWith("illum");
     }
 
+    private boolean isNi(String line){
+        return line.startsWith("Ni");
+    }
+
+    private boolean isMapKa(String line){
+        return line.startsWith("map_Ka");
+    }
+
+    private boolean isMapKd(String line){
+        return line.startsWith("map_Kd");
+    }
+
+    private boolean isMapKs(String line){
+        return line.startsWith("map_Ks");
+    }
+
     public float getD() {
         return d;
     }
@@ -110,5 +155,25 @@ public class Material {
 
     public float[] getKs() {
         return ks;
+    }
+
+    public int getIllum() {
+        return illum;
+    }
+
+    public float getNi() {
+        return ni;
+    }
+
+    public Bitmap getMapKa() {
+        return mapKa;
+    }
+
+    public Bitmap getMapKd() {
+        return mapKd;
+    }
+
+    public Bitmap getMapKs() {
+        return mapKs;
     }
 }

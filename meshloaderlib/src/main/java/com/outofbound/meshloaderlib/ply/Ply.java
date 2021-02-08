@@ -13,30 +13,58 @@ public class Ply {
     private int[] indices = null;
     private final String[] content;
 
+    /**
+     * Instantiate Ply.
+     * @param context current context.
+     * @param filename the filename (.ply) in assets folder.
+     */
     public Ply(Context context, String filename){
         content = Util.read(context, filename).split("end_header\n");
     }
 
+    /**
+     * Return the vertices loaded.
+     * @return the vertices.
+     */
     public float[] getVertices(){
         return vertices;
     }
 
+    /**
+     * Return the normals loaded.
+     * @return the normals.
+     */
     public float[] getNormals(){
         return normals;
     }
 
+    /**
+     * Return the colors loaded.
+     * @return the colors.
+     */
     public float[] getColors(){
         return colors;
     }
 
+    /**
+     * Return the uvs loaded.
+     * @return the uvs.
+     */
     public float[] getUvs(){
         return uvs;
     }
 
+    /**
+     * Return the indices loaded.
+     * @return the indices.
+     */
     public int[] getIndices(){
         return indices;
     }
 
+    /**
+     * Load the .ply file.
+     */
     public void load(){
         String[] header = content[0].split("\n");
         String[] data = content[1].split("\n");
