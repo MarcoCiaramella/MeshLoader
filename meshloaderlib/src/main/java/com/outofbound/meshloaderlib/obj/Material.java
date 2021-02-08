@@ -51,6 +51,15 @@ public class Material {
             else if (isNi(line)){
                 loadNi(line);
             }
+            else if (isMapKa(line)){
+                loadMapKa(line);
+            }
+            else if (isMapKd(line)){
+                loadMapKd(line);
+            }
+            else if (isMapKs(line)){
+                loadMapKs(line);
+            }
         }
     }
 
