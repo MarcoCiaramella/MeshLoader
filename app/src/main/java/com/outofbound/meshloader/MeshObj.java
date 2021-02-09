@@ -10,7 +10,7 @@ public class MeshObj extends Mesh {
 
     @Override
     public void doTransformation(float[] mMatrix) {
-        rotation.y += 0.1f;
+        rotation.y += 0.5f;
         rotateY(mMatrix);
     }
 }

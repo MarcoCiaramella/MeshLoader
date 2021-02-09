@@ -5,6 +5,8 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
+import com.outofbound.meshloaderlib.util.Util;
+
 import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -41,6 +43,8 @@ public class MeshView extends GLSurfaceView implements GLSurfaceView.Renderer {
         meshes = new ArrayList<>();
         MeshObj meshObj = new MeshObj(getContext(),"monkey.obj");
         meshes.add(meshObj);
+        MeshPly meshPly = new MeshPly(getContext(),"monkey.ply", Util.getBitmapFromAsset(getContext(),"monkey_ply_texture.png"));
+        //meshes.add(meshPly);
         sceneShader = new SceneShader(getContext());
     }
 
