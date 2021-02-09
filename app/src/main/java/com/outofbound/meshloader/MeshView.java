@@ -41,7 +41,7 @@ public class MeshView extends GLSurfaceView implements GLSurfaceView.Renderer {
         cameraPerspective = new CameraPerspective(CAMERA_EYE, CAMERA_CENTER, CAMERA_UP, 1, 1000);
 
         meshes = new ArrayList<>();
-        MeshObj meshObj = new MeshObj(getContext(),"monkey.obj");
+        MeshObj meshObj = new MeshObj(getContext(),"monkey2.obj");
         meshes.add(meshObj);
         MeshPly meshPly = new MeshPly(getContext(),"monkey.ply", Util.getBitmapFromAsset(getContext(),"monkey_ply_texture.png"));
         //meshes.add(meshPly);
