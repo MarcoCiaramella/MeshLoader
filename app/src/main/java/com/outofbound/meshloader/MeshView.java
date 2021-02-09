@@ -47,6 +47,7 @@ public class MeshView extends GLSurfaceView implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
+        cameraPerspective.setWidth(width).setHeight(height);
     }
 
     @Override

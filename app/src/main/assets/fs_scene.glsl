@@ -32,7 +32,7 @@ float specularLighting(vec3 normal, vec3 lightDir, vec3 viewDir){
     return pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
 }
 
-vec4 calcDirLight(vec3 normal, vec3 viewDir){
+vec4 calcLight(vec3 normal, vec3 viewDir){
     vec3 lightDir = normalize(-lightDirection);
     float diff = diffuseLighting(normal, lightDir);
     float spec = specularLighting(normal, lightDir, viewDir);
@@ -46,6 +46,6 @@ vec4 calcDirLight(vec3 normal, vec3 viewDir){
 void main() {
     vec3 normal = normalize(vNormal);
     vec3 viewDir = normalize(uViewPos - vec3(vPosition));
-    gl_FragColor = calcDirLight(normal, viewDir);
+    gl_FragColor = calcLight(normal, viewDir);
 }
 

@@ -2,7 +2,7 @@ package com.outofbound.meshloader;
 
 import android.content.Context;
 
-public class MeshObj extends Mesh{
+public class MeshObj extends Mesh {
 
     public MeshObj(Context context, String mesh) {
         super(context, mesh);
@@ -10,6 +10,7 @@ public class MeshObj extends Mesh{
 
     @Override
     public void doTransformation(float[] mMatrix) {
-
+        rotation.y += 0.1f;
+        rotateY(mMatrix);
     }
 }
