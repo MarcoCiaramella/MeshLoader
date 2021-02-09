@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -41,5 +42,50 @@ public class ObjTest {
         assertNotNull(obj.getTextureCoords());
         assertNotNull(obj.getMaterial());
         assertNotNull(obj.getMaterial().getMapKd());
+    }
+
+    @Test
+    public void load3_isCorrect(){
+        Obj obj = new Obj(context,"cube.obj");
+        obj.load();
+        float[] normals = {
+                -1.0f,0.0f,0.0f,
+                -1.0f,0.0f,0.0f,
+                -1.0f,0.0f,0.0f,
+                -1.0f,0.0f,0.0f,
+                -1.0f,0.0f,0.0f,
+                -1.0f,0.0f,0.0f,
+                0.0f,0.0f,-1.0f,
+                0.0f,0.0f,-1.0f,
+                0.0f,0.0f,-1.0f,
+                0.0f,0.0f,-1.0f,
+                0.0f,0.0f,-1.0f,
+                0.0f,0.0f,-1.0f,
+                1.0f,0.0f,0.0f,
+                1.0f,0.0f,0.0f,
+                1.0f,0.0f,0.0f,
+                1.0f,0.0f,0.0f,
+                1.0f,0.0f,0.0f,
+                1.0f,0.0f,0.0f,
+                0.0f,0.0f,1.0f,
+                0.0f,0.0f,1.0f,
+                0.0f,0.0f,1.0f,
+                0.0f,0.0f,1.0f,
+                0.0f,0.0f,1.0f,
+                0.0f,0.0f,1.0f,
+                0.0f,-1.0f,0.0f,
+                0.0f,-1.0f,0.0f,
+                0.0f,-1.0f,0.0f,
+                0.0f,-1.0f,0.0f,
+                0.0f,-1.0f,0.0f,
+                0.0f,-1.0f,0.0f,
+                0.0f,1.0f,0.0f,
+                0.0f,1.0f,0.0f,
+                0.0f,1.0f,0.0f,
+                0.0f,1.0f,0.0f,
+                0.0f,1.0f,0.0f,
+                0.0f,1.0f,0.0f
+        };
+        assertArrayEquals(normals,obj.getNormals(),0);
     }
 }
