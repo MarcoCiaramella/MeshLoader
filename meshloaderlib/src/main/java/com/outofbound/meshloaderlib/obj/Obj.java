@@ -13,6 +13,9 @@ public class Obj {
     private final int[] indices;
     private final String[] content;
     private Material material;
+    private int ioutV = 0;
+    private int ioutVt = 0;
+    private int ioutVn = 0;
 
     /**
      * Instantiate Obj.
@@ -21,11 +24,10 @@ public class Obj {
      */
     public Obj(Context context, String filename){
         content = Util.read(context, filename).split("\n");
-        int numVertices = getNumVertices();
-        vertices = new float[numVertices *3];
-        textureCoords = new float[numVertices *2];
-        normals = new float[numVertices *3];
         indices = new int[getNumIndices()];
+        vertices = new float[indices.length * 3];
+        textureCoords = new float[indices.length * 2];
+        normals = new float[indices.length * 3];
         if (useMaterial()){
             material = new Material(context,getMaterialFileName());
         }
@@ -36,28 +38,29 @@ public class Obj {
      */
     public void load(){
         loadFaces();
+        loadIndices();
         if (material != null) {
             material.load();
         }
     }
 
-    private void loadVertices(){
+    private float[] loadVertices(){
+        float[] vertices = new float[getNumVertices()*3];
         int pos = 0;
         for (String line : content) {
-            String[] values = line.split(" ");
             if (isVertex(line)) {
-                pos = loadVertex(vertices, pos, values[1], values[2], values[3]);
+                pos = loadVertex(line, vertices, pos);
             }
         }
+        return vertices;
     }
 
     private float[] loadTextureCoords(){
         float[] textureCoords = new float[getNumTextureCoords()*2];
         int pos = 0;
         for (String line : content) {
-            String[] values = line.split(" ");
             if (isTextureCoord(line)){
-                pos = loadTextureCoord(textureCoords, pos, values[1], values[2]);
+                pos = loadTextureCoord(line, textureCoords, pos);
             }
         }
         return textureCoords;
@@ -67,68 +70,73 @@ public class Obj {
         float[] normals = new float[getNumNormals()*3];
         int pos = 0;
         for (String line : content) {
-            String[] values = line.split(" ");
             if (isNormal(line)){
-                pos = loadNormal(normals, pos, values[1], values[2], values[3]);
+                pos = loadNormal(line, normals, pos);
             }
         }
         return normals;
     }
 
-    private void loadFaces(){
-        loadVertices();
-        float[] textureCoords = loadTextureCoords();
-        float[] normals = loadNormals();
+    private void loadIndices(){
+        int i = 0;
         int pos = 0;
         for (String line : content){
-            String[] values = line.split(" ");
             if (isFace(line)){
-                pos = loadFace(values, pos, textureCoords, normals);
+                String[] values = line.split(" ");
+                int i1 = i;
+                for (int j = 1; j < values.length - 2; j++) {
+                    int i2 = i + 1;
+                    int i3 = i + 2;
+                    i++;
+                    pos = Util.addToArray(indices, pos, i1, i2, i3);
+                }
+                i++;
             }
         }
     }
 
-    private int loadVertex(float[] vertices, int pos, String... values){
-        return Util.addToArray(vertices,pos,values);
-    }
-
-    private int loadTextureCoord(float[] textureCoords, int pos, String... values){
-        return Util.addToArray(textureCoords,pos,values);
-    }
-
-    private int loadNormal(float[] normals, int pos, String... values){
-        return Util.addToArray(normals,pos,values);
-    }
-
-    private int loadFace(String[] values, int pos, float[] textureCoords, float[] normals){
-        String[] faceVertex1 = values[1].split("/");
-        int iv1 = Integer.parseInt(faceVertex1[0]) - 1;
-        int ivt1 = Integer.parseInt(faceVertex1[1]) - 1;
-        int ivn1 = Integer.parseInt(faceVertex1[2]) - 1;
-        for (int i = 1; i < values.length - 2; i++){
-            String[] faceVertex2 = values[i+1].split("/");
-            int iv2 = Integer.parseInt(faceVertex2[0]) - 1;
-            int ivt2 = Integer.parseInt(faceVertex2[1]) - 1;
-            int ivn2 = Integer.parseInt(faceVertex2[2]) - 1;
-            String[] faceVertex3 = values[i+2].split("/");
-            int iv3 = Integer.parseInt(faceVertex3[0]) - 1;
-            int ivt3 = Integer.parseInt(faceVertex3[1]) - 1;
-            int ivn3 = Integer.parseInt(faceVertex3[2]) - 1;
-            pos = Util.addToArray(indices,pos,iv1,iv2,iv3);
-            copy(textureCoords,ivt1,this.textureCoords,iv1,2);
-            copy(textureCoords,ivt2,this.textureCoords,iv2,2);
-            copy(textureCoords,ivt3,this.textureCoords,iv3,2);
-            copy(normals,ivn1,this.normals,iv1,3);
-            copy(normals,ivn2,this.normals,iv2,3);
-            copy(normals,ivn3,this.normals,iv3,3);
+    private void loadFaces(){
+        float[] vertices = loadVertices();
+        float[] textureCoords = loadTextureCoords();
+        float[] normals = loadNormals();
+        for (String line : content){
+            if (isFace(line)){
+                loadFace(line, vertices, textureCoords, normals);
+            }
         }
-        return pos;
     }
 
-    private void copy(float[] in, int inPos, float[] out, int outPos, int size){
-        for (int i = 0; i < size; i++) {
-            out[outPos * 2] = in[inPos * 2 + i];
+    private int loadVertex(String line, float[] vertices, int pos){
+        String[] values = line.split(" ");
+        return Util.addToArray(vertices,pos,values[1],values[2],values[3]);
+    }
+
+    private int loadTextureCoord(String line, float[] textureCoords, int pos){
+        String[] values = line.split(" ");
+        return Util.addToArray(textureCoords,pos,values[1],values[2]);
+    }
+
+    private int loadNormal(String line, float[] normals, int pos){
+        String[] values = line.split(" ");
+        return Util.addToArray(normals,pos,values[1],values[2],values[3]);
+    }
+
+    private void loadFace(String line, float[] vertices, float[] textureCoords, float[] normals){
+        String[] values = line.split(" ");
+        for (int i = 1; i < values.length; i++){
+            String[] faceVertex = values[i].split("/");
+            int iinV = Integer.parseInt(faceVertex[0]) - 1;
+            int iinVt = Integer.parseInt(faceVertex[1]) - 1;
+            int iinVn = Integer.parseInt(faceVertex[2]) - 1;
+            ioutV = copy(vertices,iinV,this.vertices, ioutV,3);
+            ioutVt = copy(textureCoords,iinVt,this.textureCoords, ioutVt,2);
+            ioutVn = copy(normals,iinVn,this.normals, ioutVn,3);
         }
+    }
+
+    private int copy(float[] in, int iin, float[] out, int iout, int size){
+        if (size >= 0) System.arraycopy(in, iin * size, out, iout * size, size);
+        return iout + 1;
     }
 
     private int getNumVertices(){
