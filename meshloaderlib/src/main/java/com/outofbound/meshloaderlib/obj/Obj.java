@@ -83,8 +83,9 @@ public class Obj {
         for (String line : content){
             if (isFace(line)){
                 String[] values = line.split(" ");
+                int num = values.length - 1;
                 int i1 = i;
-                for (int j = 1; j < values.length - 2; j++) {
+                for (int j = 1; j < num - 1; j++) {
                     int i2 = i + 1;
                     int i3 = i + 2;
                     i++;
