@@ -29,7 +29,7 @@ public class ObjTest {
         assertNotNull(obj.getIndices());
         assertNotNull(obj.getNormals());
         assertNotNull(obj.getTextureCoords());
-        assertNull(obj.getMaterial());
+        assertNotNull(obj.getMaterial());
     }
 
     @Test
@@ -48,44 +48,32 @@ public class ObjTest {
     public void load3_isCorrect(){
         Obj obj = new Obj(context,"cube.obj");
         obj.load();
-        float[] normals = {
-                -1.0f,0.0f,0.0f,
-                -1.0f,0.0f,0.0f,
-                -1.0f,0.0f,0.0f,
-                -1.0f,0.0f,0.0f,
-                -1.0f,0.0f,0.0f,
-                -1.0f,0.0f,0.0f,
-                0.0f,0.0f,-1.0f,
-                0.0f,0.0f,-1.0f,
-                0.0f,0.0f,-1.0f,
-                0.0f,0.0f,-1.0f,
-                0.0f,0.0f,-1.0f,
-                0.0f,0.0f,-1.0f,
-                1.0f,0.0f,0.0f,
-                1.0f,0.0f,0.0f,
-                1.0f,0.0f,0.0f,
-                1.0f,0.0f,0.0f,
-                1.0f,0.0f,0.0f,
-                1.0f,0.0f,0.0f,
-                0.0f,0.0f,1.0f,
-                0.0f,0.0f,1.0f,
-                0.0f,0.0f,1.0f,
-                0.0f,0.0f,1.0f,
-                0.0f,0.0f,1.0f,
-                0.0f,0.0f,1.0f,
-                0.0f,-1.0f,0.0f,
-                0.0f,-1.0f,0.0f,
-                0.0f,-1.0f,0.0f,
-                0.0f,-1.0f,0.0f,
-                0.0f,-1.0f,0.0f,
-                0.0f,-1.0f,0.0f,
-                0.0f,1.0f,0.0f,
-                0.0f,1.0f,0.0f,
-                0.0f,1.0f,0.0f,
-                0.0f,1.0f,0.0f,
-                0.0f,1.0f,0.0f,
-                0.0f,1.0f,0.0f
+        float[] textureCoords = {
+                0.375000f,0.000000f,
+                0.625000f,0.000000f,
+                0.625000f,0.250000f,
+                0.375000f,0.250000f,
+                0.375000f,0.250000f,
+                0.625000f,0.250000f,
+                0.625000f,0.500000f,
+                0.375000f,0.500000f,
+                0.375000f,0.500000f,
+                0.625000f,0.500000f,
+                0.625000f,0.750000f,
+                0.375000f,0.750000f,
+                0.375000f,0.750000f,
+                0.625000f,0.750000f,
+                0.625000f,1.000000f,
+                0.375000f,1.000000f,
+                0.125000f,0.500000f,
+                0.375000f,0.500000f,
+                0.375000f,0.750000f,
+                0.125000f,0.750000f,
+                0.625000f,0.500000f,
+                0.875000f,0.500000f,
+                0.875000f,0.750000f,
+                0.625000f,0.750000f
         };
-        assertArrayEquals(normals,obj.getNormals(),0);
+        assertArrayEquals(textureCoords,obj.getTextureCoords(),0);
     }
 }
