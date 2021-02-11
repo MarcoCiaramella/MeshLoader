@@ -68,10 +68,10 @@ public class Util {
         return pos;
     }
 
-    public static Bitmap getBitmapFromAsset(Context context, String fileName){
+    public static Bitmap getBitmapFromAsset(Context context, String filename){
         AssetManager assetManager = context.getAssets();
         try {
-            return rotate(BitmapFactory.decodeStream(assetManager.open(fileName)));
+            return rotate(BitmapFactory.decodeStream(assetManager.open(filename)));
         } catch (IOException e) {
             e.printStackTrace();
         }
