@@ -83,9 +83,9 @@ public class Obj {
         for (String line : content){
             if (isFace(line)){
                 String[] values = line.split(" ");
-                int num = values.length - 1;
+                int numTriangles = (values.length - 1) - 2;
                 int i1 = i;
-                for (int j = 1; j < num - 1; j++) {
+                for (int j = 0; j < numTriangles; j++) {
                     int i2 = i + 1;
                     int i3 = i + 2;
                     i++;
@@ -129,9 +129,9 @@ public class Obj {
             int iinV = Integer.parseInt(faceVertex[0]) - 1;
             int iinVt = Integer.parseInt(faceVertex[1]) - 1;
             int iinVn = Integer.parseInt(faceVertex[2]) - 1;
-            ioutV = copy(vertices,iinV,this.vertices, ioutV,3);
-            ioutVt = copy(textureCoords,iinVt,this.textureCoords, ioutVt,2);
-            ioutVn = copy(normals,iinVn,this.normals, ioutVn,3);
+            ioutV = copy(vertices, iinV, this.vertices, ioutV,3);
+            ioutVt = copy(textureCoords, iinVt, this.textureCoords, ioutVt,2);
+            ioutVn = copy(normals, iinVn, this.normals, ioutVn,3);
         }
     }
 
