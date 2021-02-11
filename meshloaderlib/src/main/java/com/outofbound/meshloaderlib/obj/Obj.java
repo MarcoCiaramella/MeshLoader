@@ -91,7 +91,7 @@ public class Obj {
                     i++;
                     pos = Util.addToArray(indices, pos, i1, i2, i3);
                 }
-                i++;
+                i += 2;
             }
         }
     }
@@ -174,7 +174,8 @@ public class Obj {
         int numIndices = 0;
         for (String line : content){
             if (isFace(line)){
-                numIndices += ((line.split(" ").length - 1) - 2) * 3;
+                int numTriangles = (line.split(" ").length - 1) - 2;
+                numIndices += numTriangles * 3;
             }
         }
         return numIndices;
