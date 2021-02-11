@@ -24,10 +24,11 @@ public class Obj {
      */
     public Obj(Context context, String filename){
         content = Util.read(context, filename).split("\n");
+        int numVertices = getNumVertices();
+        vertices = new float[numVertices * 3];
+        textureCoords = new float[numVertices * 2];
+        normals = new float[numVertices * 3];
         indices = new int[getNumIndices()];
-        vertices = new float[indices.length * 3];
-        textureCoords = new float[indices.length * 2];
-        normals = new float[indices.length * 3];
         if (useMaterial()){
             material = new Material(context,getMaterialFileName());
         }
@@ -44,44 +45,47 @@ public class Obj {
         }
     }
 
-    private float[] loadVertices(){
-        float[] vertices = new float[getNumVertices()*3];
+    private float[] loadV(){
+        float[] v = new float[getNumV()*3];
         int pos = 0;
         for (String line : content) {
-            if (isVertex(line)) {
-                pos = loadVertex(line, vertices, pos);
+            if (isV(line)) {
+                String[] values = line.split(" ");
+                pos = Util.addToArray(v,pos,values[1],values[2],values[3]);
             }
         }
-        return vertices;
+        return v;
     }
 
-    private float[] loadTextureCoords(){
-        float[] textureCoords = new float[getNumTextureCoords()*2];
+    private float[] loadVt(){
+        float[] vt = new float[getNumVt()*2];
         int pos = 0;
         for (String line : content) {
-            if (isTextureCoord(line)){
-                pos = loadTextureCoord(line, textureCoords, pos);
+            if (isVt(line)){
+                String[] values = line.split(" ");
+                pos = Util.addToArray(vt,pos,values[1],values[2]);
             }
         }
-        return textureCoords;
+        return vt;
     }
 
-    private float[] loadNormals(){
-        float[] normals = new float[getNumNormals()*3];
+    private float[] loadVn(){
+        float[] vn = new float[getNumVn()*3];
         int pos = 0;
         for (String line : content) {
-            if (isNormal(line)){
-                pos = loadNormal(line, normals, pos);
+            if (isVn(line)){
+                String[] values = line.split(" ");
+                pos = Util.addToArray(vn,pos,values[1],values[2],values[3]);
             }
         }
-        return normals;
+        return vn;
     }
 
     private void loadIndices(){
         int i = 0;
         int pos = 0;
         for (String line : content){
-            if (isFace(line)){
+            if (isF(line)){
                 String[] values = line.split(" ");
                 int numTriangles = (values.length - 1) - 2;
                 int i1 = i;
@@ -97,41 +101,26 @@ public class Obj {
     }
 
     private void loadFaces(){
-        float[] vertices = loadVertices();
-        float[] textureCoords = loadTextureCoords();
-        float[] normals = loadNormals();
+        float[] v = loadV();
+        float[] vt = loadVt();
+        float[] vn = loadVn();
         for (String line : content){
-            if (isFace(line)){
-                loadFace(line, vertices, textureCoords, normals);
+            if (isF(line)){
+                loadFace(line, v, vt, vn);
             }
         }
     }
 
-    private int loadVertex(String line, float[] vertices, int pos){
-        String[] values = line.split(" ");
-        return Util.addToArray(vertices,pos,values[1],values[2],values[3]);
-    }
-
-    private int loadTextureCoord(String line, float[] textureCoords, int pos){
-        String[] values = line.split(" ");
-        return Util.addToArray(textureCoords,pos,values[1],values[2]);
-    }
-
-    private int loadNormal(String line, float[] normals, int pos){
-        String[] values = line.split(" ");
-        return Util.addToArray(normals,pos,values[1],values[2],values[3]);
-    }
-
-    private void loadFace(String line, float[] vertices, float[] textureCoords, float[] normals){
+    private void loadFace(String line, float[] v, float[] vt, float[] vn){
         String[] values = line.split(" ");
         for (int i = 1; i < values.length; i++){
             String[] faceVertex = values[i].split("/");
             int iinV = Integer.parseInt(faceVertex[0]) - 1;
             int iinVt = Integer.parseInt(faceVertex[1]) - 1;
             int iinVn = Integer.parseInt(faceVertex[2]) - 1;
-            ioutV = copy(vertices, iinV, this.vertices, ioutV,3);
-            ioutVt = copy(textureCoords, iinVt, this.textureCoords, ioutVt,2);
-            ioutVn = copy(normals, iinVn, this.normals, ioutVn,3);
+            ioutV = copy(v, iinV, this.vertices, ioutV,3);
+            ioutVt = copy(vt, iinVt, this.textureCoords, ioutVt,2);
+            ioutVn = copy(vn, iinVn, this.normals, ioutVn,3);
         }
     }
 
@@ -140,30 +129,30 @@ public class Obj {
         return iout + 1;
     }
 
-    private int getNumVertices(){
+    private int getNumV(){
         int num = 0;
         for (String line : content) {
-            if (isVertex(line)) {
+            if (isV(line)) {
                 num++;
             }
         }
         return num;
     }
 
-    private int getNumTextureCoords(){
+    private int getNumVt(){
         int num = 0;
         for (String line : content) {
-            if (isTextureCoord(line)) {
+            if (isVt(line)) {
                 num++;
             }
         }
         return num;
     }
 
-    private int getNumNormals(){
+    private int getNumVn(){
         int num = 0;
         for (String line : content) {
-            if (isNormal(line)) {
+            if (isVn(line)) {
                 num++;
             }
         }
@@ -171,29 +160,39 @@ public class Obj {
     }
 
     private int getNumIndices(){
-        int numIndices = 0;
+        int num = 0;
         for (String line : content){
-            if (isFace(line)){
+            if (isF(line)){
                 int numTriangles = (line.split(" ").length - 1) - 2;
-                numIndices += numTriangles * 3;
+                num += numTriangles * 3;
             }
         }
-        return numIndices;
+        return num;
     }
 
-    private boolean isVertex(String line){
+    private int getNumVertices(){
+        int num = 0;
+        for (String line : content){
+            if (isF(line)){
+                num += line.split(" ").length - 1;
+            }
+        }
+        return num;
+    }
+
+    private boolean isV(String line){
         return line.startsWith("v ");
     }
 
-    private boolean isTextureCoord(String line){
+    private boolean isVt(String line){
         return line.startsWith("vt ");
     }
 
-    private boolean isNormal(String line){
+    private boolean isVn(String line){
         return line.startsWith("vn ");
     }
 
-    private boolean isFace(String line){
+    private boolean isF(String line){
         return line.startsWith("f ");
     }
 
