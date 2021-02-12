@@ -67,6 +67,7 @@ public abstract class Mesh {
             Obj obj = new Obj(context, fileName);
             obj.load();
             this.vertices = obj.getVertices();
+            this.texCoords = obj.getTextureCoords();
             this.normals = obj.getNormals();
             this.indices = obj.getIndices();
             this.textureBitmap = obj.getMaterial().getMapKd();
