@@ -13,7 +13,6 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 @Config(sdk = 28)
 @RunWith(RobolectricTestRunner.class)
