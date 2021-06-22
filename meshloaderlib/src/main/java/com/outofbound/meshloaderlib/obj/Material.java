@@ -106,44 +106,52 @@ public class Material {
         mapKs = Util.getBitmapFromAsset(context,line.split(" ")[1]);
     }
 
+    private boolean containsSpace(String line){
+        return line.contains(" ");
+    }
+
+    private boolean startsWith(String line, String charSeq){
+        return line.contains(" ") && line.split(" ")[0].equalsIgnoreCase(charSeq);
+    }
+
     private boolean isNs(String line){
-        return line.startsWith("ns");
+        return startsWith(line, "ns");
     }
 
     private boolean isKa(String line){
-        return line.startsWith("ka");
+        return startsWith(line, "ka");
     }
 
     private boolean isKd(String line){
-        return line.startsWith("kd");
+        return startsWith(line, "kd");
     }
 
     private boolean isKs(String line){
-        return line.startsWith("ks");
+        return startsWith(line, "ks");
     }
 
     private boolean isD(String line){
-        return line.startsWith("d");
+        return startsWith(line, "d");
     }
 
     private boolean isIllum(String line){
-        return line.startsWith("illum");
+        return startsWith(line, "illum");
     }
 
     private boolean isNi(String line){
-        return line.startsWith("Ni");
+        return startsWith(line, "Ni");
     }
 
     private boolean isMapKa(String line){
-        return line.startsWith("map_Ka");
+        return startsWith(line, "map_Ka");
     }
 
     private boolean isMapKd(String line){
-        return line.startsWith("map_Kd");
+        return startsWith(line, "map_Kd");
     }
 
     private boolean isMapKs(String line){
-        return line.startsWith("map_Ks");
+        return startsWith(line, "map_Ks");
     }
 
     public float getD() {
