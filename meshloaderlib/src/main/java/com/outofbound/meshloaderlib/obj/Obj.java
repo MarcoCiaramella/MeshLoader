@@ -23,7 +23,7 @@ public class Obj {
      * @param filename the filename (.obj) in assets folder.
      */
     public Obj(Context context, String filename){
-        content = Util.read(context, filename).split("\n");
+        content = toStringArray(Util.read(context, filename), "\n");
         int numVertices = getNumVertices();
         vertices = new float[numVertices * 3];
         textureCoords = new float[numVertices * 2];
@@ -50,8 +50,8 @@ public class Obj {
         int pos = 0;
         for (String line : content) {
             if (isV(line)) {
-                String[] values = line.split(" ");
-                pos = Util.addToArray(v,pos,values[1],values[2],values[3]);
+                float[] values = toFloatArray(line, " ");
+                pos = Util.addToArray(v,pos,values[0],values[1],values[2]);
             }
         }
         return v;
@@ -62,8 +62,8 @@ public class Obj {
         int pos = 0;
         for (String line : content) {
             if (isVt(line)){
-                String[] values = line.split(" ");
-                pos = Util.addToArray(vt,pos,values[1],values[2]);
+                float[] values = toFloatArray(line, " ");
+                pos = Util.addToArray(vt,pos,values[0],values[1]);
             }
         }
         return vt;
@@ -74,8 +74,8 @@ public class Obj {
         int pos = 0;
         for (String line : content) {
             if (isVn(line)){
-                String[] values = line.split(" ");
-                pos = Util.addToArray(vn,pos,values[1],values[2],values[3]);
+                float[] values = toFloatArray(line, " ");
+                pos = Util.addToArray(vn,pos,values[0],values[1],values[2]);
             }
         }
         return vn;
@@ -86,7 +86,7 @@ public class Obj {
         int pos = 0;
         for (String line : content){
             if (isF(line)){
-                String[] values = line.split(" ");
+                String[] values = toStringArray(line, " ");
                 int numTriangles = (values.length - 1) - 2;
                 int i1 = i;
                 for (int j = 0; j < numTriangles; j++) {
@@ -112,12 +112,12 @@ public class Obj {
     }
 
     private void loadFace(String line, float[] v, float[] vt, float[] vn){
-        String[] values = line.split(" ");
+        String[] values = toStringArray(line, " ");
         for (int i = 1; i < values.length; i++){
-            String[] faceVertex = values[i].split("/");
-            int iinV = Integer.parseInt(faceVertex[0]) - 1;
-            int iinVt = Integer.parseInt(faceVertex[1]) - 1;
-            int iinVn = Integer.parseInt(faceVertex[2]) - 1;
+            int[] faceVertex = toIntArray(values[i], "/");
+            int iinV = faceVertex[0] - 1;
+            int iinVt = faceVertex[1] - 1;
+            int iinVn = faceVertex[2] - 1;
             ioutV = copy(v, iinV, this.vertices, ioutV,3);
             ioutVt = copy(vt, iinVt, this.textureCoords, ioutVt,2);
             ioutVn = copy(vn, iinVn, this.normals, ioutVn,3);
@@ -163,7 +163,7 @@ public class Obj {
         int num = 0;
         for (String line : content){
             if (isF(line)){
-                int numTriangles = (line.split(" ").length - 1) - 2;
+                int numTriangles = (toStringArray(line, " ").length - 1) - 2;
                 num += numTriangles * 3;
             }
         }
@@ -174,7 +174,7 @@ public class Obj {
         int num = 0;
         for (String line : content){
             if (isF(line)){
-                num += line.split(" ").length - 1;
+                num += toStringArray(line, " ").length - 1;
             }
         }
         return num;
@@ -240,7 +240,7 @@ public class Obj {
     private String getMaterialFileName(){
         for (String line : content){
             if (line.startsWith("mtllib")){
-                return line.split(" ")[1];
+                return toStringArray(line, " ")[1];
             }
         }
         return null;
@@ -252,5 +252,79 @@ public class Obj {
      */
     public Material getMaterial() {
         return material;
+    }
+
+    private boolean isFloat(String string){
+        try {
+            Float.parseFloat(string);
+        }
+        catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isInt(String string){
+        try {
+            Integer.parseInt(string);
+        }
+        catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    private float[] toFloatArray(String string, String regex){
+        int c = 0;
+        String[] values = string.split(regex);
+        for (String value : values){
+            if (isFloat(value)){
+                c++;
+            }
+        }
+        int i = 0;
+        float[] result = new float[c];
+        for (String value : values){
+            if (isFloat(value)){
+                result[i++] = Float.parseFloat(value);
+            }
+        }
+        return result;
+    }
+
+    private int[] toIntArray(String string, String regex){
+        int c = 0;
+        String[] values = string.split(regex);
+        for (String value : values){
+            if (isInt(value)){
+                c++;
+            }
+        }
+        int i = 0;
+        int[] result = new int[c];
+        for (String value : values){
+            if (isInt(value)){
+                result[i++] = Integer.parseInt(value);
+            }
+        }
+        return result;
+    }
+
+    private String[] toStringArray(String string, String regex){
+        int c = 0;
+        String[] values = string.split(regex);
+        for (String value : values){
+            if (!value.isEmpty()){
+                c++;
+            }
+        }
+        int i = 0;
+        String[] result = new String[c];
+        for (String value : values){
+            if (!value.isEmpty()){
+                result[i++] = value;
+            }
+        }
+        return result;
     }
 }
