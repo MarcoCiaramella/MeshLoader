@@ -20,7 +20,7 @@ Add the dependency
 
 ```
 dependencies {
-	        implementation 'com.github.MarcoCiaramella:MeshLoader:1.0.2'
+	        implementation 'com.github.MarcoCiaramella:MeshLoader:x.x.x'
 }
 ```
 
